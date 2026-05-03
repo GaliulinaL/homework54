@@ -1,122 +1,76 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+type Cell = {
+  hasItem: boolean;
+  clicked: boolean;
+};
+
+const createCells = (): Cell[] => {
+  const arr: Cell[] = [];
+
+  for (let i = 0; i < 36; i++) {
+    arr.push({ hasItem: false, clicked: false });
+  }
+
+  const randomIndex = Math.floor(Math.random() * 36);
+  arr[randomIndex].hasItem = true;
+
+  return arr;
+};
+
+const App = () => {
+  const [cells, setCells] = useState<Cell[]>(createCells());
+  const [tries, setTries] = useState(0);
+  const [found, setFound] = useState(false);
+
+  const handleClick = (index: number) => {
+    if (cells[index].clicked || found) return;
+
+    const newCells = [...cells];
+    newCells[index] = {
+      ...newCells[index],
+      clicked: true,
+    };
+
+    setCells(newCells);
+    setTries(tries + 1);
+
+    if (newCells[index].hasItem) {
+      setFound(true);
+    }
+  };
+
+  const reset = () => {
+    setCells(createCells());
+    setTries(0);
+    setFound(false);
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+      <div>
+        <h1>Найдите ❤️</h1>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+        <div className="grid">
+          {cells.map((cell, index) => (
+              <div
+                  key={index}
+                  className={`cell ${cell.clicked ? 'open' : ''}`}
+                  onClick={() => handleClick(index)}
+              >
+                {cell.clicked && cell.hasItem && '❤️'}
+              </div>
+          ))}
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
-}
+        <p>Попытки: {tries}</p>
 
-export default App
+        {found && <p>Найдено!</p>}
+
+        <button onClick={reset}>Reset</button>
+      </div>
+  );
+};
+
+export default App;
+
