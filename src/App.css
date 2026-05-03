@@ -1,21 +1,20 @@
 .grid {
-    width: 300px;
-    margin: 20px auto;
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 5px;
+    grid-template-columns: repeat(6, 50px);
+    gap: 8px;
+    justify-content: center;
+    margin: 20px 0;
 }
 
 .cell {
-    width: 45px;
-    height: 45px;
-    background: gray;
+    width: 50px;
+    height: 50px;
+    background: #989dff;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
 }
 
 .cell.open {
-    background: lightgray;
+    background: #000000;
 }
