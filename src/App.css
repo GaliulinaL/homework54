@@ -1,0 +1,21 @@
+.grid {
+    width: 300px;
+    margin: 20px auto;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 5px;
+}
+
+.cell {
+    width: 45px;
+    height: 45px;
+    background: gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.cell.open {
+    background: lightgray;
+}
